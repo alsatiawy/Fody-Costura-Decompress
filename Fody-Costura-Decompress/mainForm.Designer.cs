@@ -39,9 +39,10 @@
             // instructionsLabel
             // 
             this.instructionsLabel.AutoSize = true;
-            this.instructionsLabel.Location = new System.Drawing.Point(20, 9);
+            this.instructionsLabel.Location = new System.Drawing.Point(15, 7);
+            this.instructionsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.instructionsLabel.Name = "instructionsLabel";
-            this.instructionsLabel.Size = new System.Drawing.Size(565, 34);
+            this.instructionsLabel.Size = new System.Drawing.Size(521, 24);
             this.instructionsLabel.TabIndex = 0;
             this.instructionsLabel.Text = "Select Costura compressed resources for decompression or select files for compres" +
     "sion\r\nCompression algorithm used by Costura is DEFLATE (Costura file ext: .zip, " +
@@ -49,10 +50,10 @@
             // 
             // inputFileButton
             // 
-            this.inputFileButton.Location = new System.Drawing.Point(454, 56);
-            this.inputFileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.inputFileButton.Location = new System.Drawing.Point(445, 43);
+            this.inputFileButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.inputFileButton.Name = "inputFileButton";
-            this.inputFileButton.Size = new System.Drawing.Size(114, 31);
+            this.inputFileButton.Size = new System.Drawing.Size(86, 23);
             this.inputFileButton.TabIndex = 2;
             this.inputFileButton.Text = "browse";
             this.inputFileButton.UseVisualStyleBackColor = true;
@@ -61,10 +62,10 @@
             // decompressButton
             // 
             this.decompressButton.Enabled = false;
-            this.decompressButton.Location = new System.Drawing.Point(23, 131);
-            this.decompressButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.decompressButton.Location = new System.Drawing.Point(50, 98);
+            this.decompressButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.decompressButton.Name = "decompressButton";
-            this.decompressButton.Size = new System.Drawing.Size(256, 48);
+            this.decompressButton.Size = new System.Drawing.Size(192, 36);
             this.decompressButton.TabIndex = 4;
             this.decompressButton.Text = "Decompress";
             this.decompressButton.UseVisualStyleBackColor = true;
@@ -73,9 +74,10 @@
             // compressButton
             // 
             this.compressButton.Enabled = false;
-            this.compressButton.Location = new System.Drawing.Point(312, 131);
+            this.compressButton.Location = new System.Drawing.Point(302, 98);
+            this.compressButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.compressButton.Name = "compressButton";
-            this.compressButton.Size = new System.Drawing.Size(256, 48);
+            this.compressButton.Size = new System.Drawing.Size(192, 36);
             this.compressButton.TabIndex = 6;
             this.compressButton.Text = "Compress";
             this.compressButton.UseVisualStyleBackColor = true;
@@ -83,34 +85,36 @@
             // 
             // selectedFileTextBox
             // 
-            this.selectedFileTextBox.Location = new System.Drawing.Point(23, 60);
+            this.selectedFileTextBox.Location = new System.Drawing.Point(17, 45);
+            this.selectedFileTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.selectedFileTextBox.Name = "selectedFileTextBox";
             this.selectedFileTextBox.ReadOnly = true;
-            this.selectedFileTextBox.Size = new System.Drawing.Size(425, 22);
+            this.selectedFileTextBox.Size = new System.Drawing.Size(424, 21);
             this.selectedFileTextBox.TabIndex = 7;
             this.selectedFileTextBox.Click += new System.EventHandler(this.InputFileButton_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 98);
+            this.label1.Location = new System.Drawing.Point(15, 74);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(491, 17);
+            this.label1.Size = new System.Drawing.Size(461, 12);
             this.label1.TabIndex = 8;
             this.label1.Text = "Compressed/decompressed file will be placed in same directory of source file";
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(593, 199);
+            this.ClientSize = new System.Drawing.Size(542, 151);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.selectedFileTextBox);
             this.Controls.Add(this.compressButton);
             this.Controls.Add(this.decompressButton);
             this.Controls.Add(this.inputFileButton);
             this.Controls.Add(this.instructionsLabel);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "MainForm";
             this.Text = "Fody-Costura-(De)compress";
             this.ResumeLayout(false);

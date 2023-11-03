@@ -14,8 +14,7 @@ namespace Fody_Costura_Decompress
 {
     public partial class MainForm : Form
     {
-
-        FileInfo _sourceFileInfo;
+        List<FileInfo> _sourceFiles;
 
         public MainForm()
         {
@@ -24,26 +23,26 @@ namespace Fody_Costura_Decompress
 
         private void ProcessFile(FileInfo sourceFile, string destinationFileName, bool compress)
         {
-            using (var originalFileStream = File.OpenRead(_sourceFileInfo.FullName))
-                using (var destinationFileStream = File.Create(destinationFileName))
-                    if (compress)
-                        using (var compressionStream = new DeflateStream(destinationFileStream, CompressionMode.Compress))
-                            originalFileStream.CopyTo(compressionStream);
-                    else
-                        using (var decompressionStream = new DeflateStream(originalFileStream, CompressionMode.Decompress))
-                            decompressionStream.CopyTo(destinationFileStream);
+            using (var originalFileStream = File.OpenRead(sourceFile.FullName))
+            using (var destinationFileStream = File.Create(destinationFileName))
+                if (compress)
+                    using (var compressionStream = new DeflateStream(destinationFileStream, CompressionMode.Compress))
+                        originalFileStream.CopyTo(compressionStream);
+                else
+                    using (var decompressionStream = new DeflateStream(originalFileStream, CompressionMode.Decompress))
+                        decompressionStream.CopyTo(destinationFileStream);
         }
 
         private void InputFileButton_Click(object sender, EventArgs e)
         {
-            var openDialog = new OpenFileDialog {Multiselect = false};
+            var openDialog = new OpenFileDialog { Multiselect = true };
 
             var openResult = openDialog.ShowDialog();
 
             if (openResult == DialogResult.OK)
             {
-                selectedFileTextBox.Text = openDialog.FileName;
-                _sourceFileInfo = new FileInfo(openDialog.FileName);
+                selectedFileTextBox.Text = string.Join(";", openDialog.SafeFileNames);
+                _sourceFiles = openDialog.FileNames.Select(s => new FileInfo(s)).ToList();
                 decompressButton.Enabled = true;
                 compressButton.Enabled = true;
             }
@@ -51,32 +50,54 @@ namespace Fody_Costura_Decompress
 
         private void DecompressButton_Click(object sender, EventArgs e)
         {
-            var sourceFileName = _sourceFileInfo.FullName.ToString();
-            var inflatedFileName = sourceFileName.Remove(sourceFileName.Length - _sourceFileInfo.Extension.Length);
-            try
+            bool ret = true;
+            string errFile = "";
+            foreach (var sourceFileInfo in _sourceFiles)
             {
-                ProcessFile(_sourceFileInfo, inflatedFileName, false);
-                System.Windows.Forms.MessageBox.Show("Successfully inflated " + _sourceFileInfo.Name);
+                var sourceFileName = sourceFileInfo.FullName.ToString();
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(sourceFileName);
+                var inflatedFileName = sourceFileName.Remove(sourceFileName.Length - sourceFileInfo.Extension.Length);
+                try
+                {
+                    ProcessFile(sourceFileInfo, inflatedFileName, false);
+                    System.Diagnostics.FileVersionInfo info = System.Diagnostics.FileVersionInfo.GetVersionInfo(inflatedFileName);
+                    if (!string.IsNullOrWhiteSpace(info.InternalName))
+                        File.Move(inflatedFileName, Path.Combine(sourceFileInfo.DirectoryName, info.InternalName));
+                }
+                catch (Exception err)
+                {
+                    ret = false;
+                    errFile += sourceFileInfo.Name + ": " + err.Message;
+                }
             }
-            catch (Exception err)
-            {
-                System.Windows.Forms.MessageBox.Show("Error when inflating file: " + err.ToString());
-            }
+            if (ret)
+                MessageBox.Show("Successfully inflated.");
+            else
+                MessageBox.Show("Error when inflating file: " + System.Environment.NewLine + errFile);
         }
 
         private void compressButton_Click(object sender, EventArgs e)
         {
-            var sourceFileName = _sourceFileInfo.FullName.ToString();
-            var deflatedFileName = sourceFileName + ".compressed";
-            try
+            bool ret = true;
+            string errFile = "";
+            foreach (var sourceFileInfo in _sourceFiles)
             {
-                ProcessFile(_sourceFileInfo, deflatedFileName, true);
-                System.Windows.Forms.MessageBox.Show("Successfully deflated " + _sourceFileInfo.Name);
+                var sourceFileName = sourceFileInfo.FullName.ToString();
+                var deflatedFileName = sourceFileName + ".compressed";
+                try
+                {
+                    ProcessFile(sourceFileInfo, deflatedFileName, true);
+                }
+                catch (Exception err)
+                {
+                    ret = false;
+                    errFile += sourceFileInfo.Name + ": " + err.Message;
+                }
             }
-            catch (Exception err)
-            {
-                System.Windows.Forms.MessageBox.Show("Error when deflating file: " + err.ToString());
-            }
+            if (ret)
+                MessageBox.Show("Successfully deflated.");
+            else
+                MessageBox.Show("Error when deflated file: " + System.Environment.NewLine + errFile);
         }
     }
 }
